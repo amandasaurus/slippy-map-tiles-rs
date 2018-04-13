@@ -5,7 +5,7 @@ keywords = ["openstreetmap", "osm"]
 license = "GPL-3.0"
 name = "slippy-map-tiles"
 repository = "https://github.com/rory/slippy-map-tiles-rs"
-version = "0.13.0"
+version = "0.13.1"
 
 [dependencies]
 lazy_static = "0.1.15"
