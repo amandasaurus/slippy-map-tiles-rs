@@ -10,7 +10,8 @@
 //!
 //! You cannot create invalid tiles
 //! ```
-//! assert!(Tile::new(0, 3, 3).is_none);
+//! # use slippy_map_tiles::Tile;
+//! assert!(Tile::new(0, 3, 3).is_none());
 //! ```
 #[macro_use] extern crate lazy_static;
 extern crate regex;
