@@ -935,6 +935,7 @@ impl LatLon {
     /// Longitude
     pub fn lon(&self) -> f32 { self.lon }
 
+    /// Convert to Web Mercator format (SRID 3857)
     pub fn to_3857(&self) -> (f32, f32) {
         let x = self.lon() * 20037508.34 / 180.;
         let pi = std::f32::consts::PI;
