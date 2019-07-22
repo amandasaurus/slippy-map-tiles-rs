@@ -944,6 +944,12 @@ impl LatLon {
         
         (x, y)
     }
+
+    /// What tile is this point at on this zoom level
+    pub fn tile(&self, zoom: u8) -> Tile {
+        let (x, y) = lat_lon_to_tile(self.lat, self.lon, zoom);
+        Tile::new(zoom, x, y).unwrap()
+    }
 }
 
 /// A Bounding box
