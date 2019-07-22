@@ -1022,6 +1022,50 @@ impl BBox {
 
     /// Return the right value of this bbox
     pub fn right(&self) -> f32 { self.right }
+
+    /// For this zoom level, return all the tiles that cover this bbox
+    pub fn tiles_for_zoom(&self, zoom: u8) -> impl Iterator<Item=Tile> {
+        let top_left_tile = lat_lon_to_tile(self.top, self.left, zoom);
+        let bottom_right_tile = lat_lon_to_tile(self.bottom, self.right, zoom);
+
+
+        (top_left_tile.0..=bottom_right_tile.0)
+            .into_iter()
+            .flat_map(move |x| (top_left_tile.1..=bottom_right_tile.1).into_iter().map(move |y| (x, y)))
+            .map(move |(x, y)| Tile::new(zoom, x, y).unwrap())
+
+    }
+
+    /// Returns the LatLon for the centre of this bbox
+    pub fn centre_point(&self) -> LatLon {
+        LatLon::new((self.top+self.bottom)/2., (self.left+self.right)/2.).unwrap()
+    }
+
+    /// Returns the LatLon for the centre of this bbox
+    pub fn center_point(&self) -> LatLon {
+        self.centre_point()
+    }
+
+    /// Returns the LatLon of the top left, i.e. north west corner, of this bbot
+    pub fn nw_corner(&self) -> LatLon {
+        LatLon::new(self.top, self.left).unwrap()
+    }
+
+    /// Returns the LatLon of the top right, i.e. north east corner, of this bbox
+    pub fn ne_corner(&self) -> LatLon {
+        LatLon::new(self.top, self.right).unwrap()
+    }
+
+    /// Returns the LatLon of the bottom left, i.e. south west corner, of this bbox
+    pub fn sw_corner(&self) -> LatLon {
+        LatLon::new(self.bottom, self.left).unwrap()
+    }
+
+    /// Returns the LatLon of the bottom right, i.e. south east corner, of this bbox.
+    pub fn se_corner(&self) -> LatLon {
+        LatLon::new(self.bottom, self.right).unwrap()
+    }
+
 }
 
 impl FromStr for BBox {
@@ -1941,6 +1985,27 @@ mod test {
         let t = Tile::new(6, 33, 21).unwrap();
         let wf = t.world_file();
         assert_eq!(format!("{}", wf), "2445.98490512564\n0\n0\n-2445.98490512564\n626172.1357121654\n6887893.4928338025\n");
+    }
+
+    #[test]
+    fn bbox_tiles() {
+        let ie_bbox = BBox::new(55.7, -11.32, 51.11, -4.97).unwrap();
+        fn check(bbox: &BBox, zoom: u8, coords: Vec<(u32, u32)>) {
+            let output: Vec<Tile> = bbox.tiles_for_zoom(zoom).collect();
+            let exptected: Vec<Tile> = coords.into_iter().map(|xy| Tile::new(zoom, xy.0, xy.1).unwrap()).collect();
+            assert_eq!(output, exptected);
+        }
+
+        check(&ie_bbox, 0, vec![(0, 0)]);
+        check(&ie_bbox, 1, vec![(0, 0)]);
+        check(&ie_bbox, 2, vec![(1, 1)]);
+        check(&ie_bbox, 3, vec![(3, 2), (3, 3)]);
+        check(&ie_bbox, 4, vec![(7, 5), (7, 6), (7, 7)]);
+    }
+
+    #[test]
+    fn merc_location_to_tile_coords1() {
+        assert_eq!(merc_location_to_tile_coords(-558712.52, 7491421.57, 0), ((0, 0), (0, 0)));
     }
 
 }
