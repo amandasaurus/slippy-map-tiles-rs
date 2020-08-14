@@ -27,6 +27,9 @@ use std::io::{BufRead, BufReader, Seek, SeekFrom};
 #[cfg(feature="world_file")]
 use world_image_file::WorldFile;
 
+#[cfg(test)]
+mod tests;
+
 /// A single tile.
 #[derive(PartialEq, Eq, Debug, Clone, Copy, Hash)]
 pub struct Tile {
@@ -1276,9 +1279,3 @@ pub fn zorder_to_xy(zorder: u64) -> (u32, u32) {
 
     (x, y)
 }
-
-
-// TODO do mod_tile tile format
-
-#[cfg(test)]
-mod tests;
