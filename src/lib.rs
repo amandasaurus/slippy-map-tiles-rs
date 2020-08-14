@@ -241,7 +241,7 @@ impl Tile {
     /// Returns the ModTileMetatile path for storing this tile
     pub fn mt_path<T: std::fmt::Display>(&self, ext: T) -> String {
         let tc = xy_to_mt(self.x, self.y);
-        format!("{}/{}/{}/{}/{}/{}/{}.{}", self.zoom, tc[0], tc[1], tc[2], tc[3], tc[4], tc[5], ext)
+        format!("{}/{}/{}/{}/{}/{}.{}", self.zoom, tc[0], tc[1], tc[2], tc[3], tc[4], ext)
     }
 
     /// Returns an iterator that yields all the tiles possible, starting from `0/0/0`. Tiles are
