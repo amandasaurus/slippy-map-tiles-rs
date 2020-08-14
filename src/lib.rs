@@ -823,7 +823,11 @@ impl ModTileMetatile {
     /// Y value of metatile
     pub fn y(&self) -> u32 { self.inner.y }
 
-    /// Y value of metatile
+    /// Zoom value of metatile
+    pub fn zoom(&self) -> u8 { self.inner.zoom }
+
+    /// What is the width or height of this metatile. For small zoom numbers (e.g. z1), there will
+    /// not be the full `scale` tiles across.
     pub fn size(self) -> u8 { self.inner.size() }
 
 }
