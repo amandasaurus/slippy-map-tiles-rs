@@ -711,8 +711,8 @@ fn bbox_tiles() {
     assert_bbox!(&ie_bbox, 0, vec![(0, 0)]);
     assert_bbox!(&ie_bbox, 1, vec![(0, 0)]);
     assert_bbox!(&ie_bbox, 2, vec![(1, 1)]);
-    assert_bbox!(&ie_bbox, 3, vec![(3, 2), (3, 3)]);
-    assert_bbox!(&ie_bbox, 4, vec![(7, 5), (7, 6), (7, 7)]);
+    assert_bbox!(&ie_bbox, 3, vec![(3, 2)]);
+    assert_bbox!(&ie_bbox, 4, vec![(7, 5)]);
 }
 
 #[test]
