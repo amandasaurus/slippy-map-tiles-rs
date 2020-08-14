@@ -990,14 +990,14 @@ impl BBox {
 
     /// Return true iff this point is in this bbox
     pub fn contains_point(&self, point: &LatLon) -> bool {
-        (point.lat <= self.top && point.lat > self.bottom && point.lon >= self.left && point.lon < self.right)
+        point.lat <= self.top && point.lat > self.bottom && point.lon >= self.left && point.lon < self.right
     }
 
 
     /// Returns true iff this bbox and `other` share at least one point
     pub fn overlaps_bbox(&self, other: &BBox) -> bool {
         // FXME check top & left edges
-        (self.left < other.right && self.right > other.left && self.top > other.bottom && self.bottom < other.top)
+        self.left < other.right && self.right > other.left && self.top > other.bottom && self.bottom < other.top
     }
 
     /// Iterate over all the tiles from z0 onwards that this bbox is in
