@@ -592,14 +592,6 @@ fn mod_tile_path() {
 }
 
 #[test]
-fn test_mod_tile_metatile() {
-    let mt_meta = ModTileMetatile::new(0, 0, 0);
-    assert!(mt_meta.is_some());
-    let mt_meta = mt_meta.unwrap();
-    assert_eq!(mt_meta.path("png"), "0/0/0/0/0/0.png");
-}
-
-#[test]
 fn size_bbox_zoom1() {
     let ie_bbox = BBox::new(55.7, -11.32, 51.11, -4.97).unwrap();
     assert_eq!(size_bbox_zoom(&ie_bbox, 0), Some(1));
@@ -724,3 +716,24 @@ fn merc_location_to_tile_coords1() {
     assert_eq!(merc_location_to_tile_coords(-558712.52, 7491421.57, 0), ((0, 0), (0, 0)));
 }
 
+mod metatiles {
+     use super::*;
+
+     mod modtiles {
+         use super::*;
+
+        #[test]
+         fn simple1() {
+            let mt_meta = ModTileMetatile::new(0, 0, 0);
+            assert!(mt_meta.is_some());
+            let mt_meta = mt_meta.unwrap();
+            assert_eq!(mt_meta.path("png"), "0/0/0/0/0/0.png");
+         }
+
+         #[test]
+         fn simple2() {
+             let mt = ModTileMetatile::new(0, 0, 0).unwrap();
+             assert_eq!(mt.tiles(), vec![Tile::new(0, 0, 0).unwrap()]);
+         }
+     }
+}
