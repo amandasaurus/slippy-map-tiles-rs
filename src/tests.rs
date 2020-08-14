@@ -69,7 +69,6 @@ fn tiles() {
     assert_eq!(parent.left(), -180.0);
     assert_eq!(parent.right(), 180.0);
 
-
     assert_eq!(parent.tc_path("png"), "0/000/000/000/000/000/000.png");
     assert_eq!(parent.mp_path("png"), "0/0000/0000/0000/0000.png");
     assert_eq!(parent.ts_path("png"), "0/000/000/000/000.png");
@@ -92,7 +91,6 @@ fn tiles() {
     assert_eq!(children[3].tc_path("png"), "1/000/000/001/000/000/001.png");
     assert_eq!(children[3].zxy_path("png"), "1/1/1.png");
     assert_eq!(children[3].zxy(), "1/1/1");
-    
 }
 
 #[test]
@@ -132,7 +130,6 @@ fn tile_from_tms() {
 
 #[test]
 fn all_tiles() {
-
     let mut it = Tile::all();
 
     assert_eq!(it.next(), Tile::new(0, 0, 0));
@@ -147,14 +144,12 @@ fn all_tiles() {
     assert_eq!(it.next(), Tile::new(2, 2, 0));
 
     let it = Tile::all();
-    let z5_tiles: Vec<Tile> = it.skip_while(|t| { t.zoom < 5 }).take(1).collect();
+    let z5_tiles: Vec<Tile> = it.skip_while(|t| t.zoom < 5).take(1).collect();
     assert_eq!(z5_tiles[0], Tile::new(5, 0, 0).unwrap());
-
 }
 
 #[test]
 fn latlon_create() {
-
     let p1 = LatLon::new(54.9, 5.5).unwrap();
     assert_eq!(p1.lat(), 54.9);
     assert_eq!(p1.lon(), 5.5);
@@ -164,7 +159,6 @@ fn latlon_create() {
 
 #[test]
 fn bbox_create() {
-
     // left=5.53 bottom=47.23 right=15.38 top=54.96
     let b1: Option<BBox> = BBox::new(54.9, 5.5, 47.2, 15.38);
     assert!(b1.is_some());
@@ -179,7 +173,6 @@ fn bbox_create() {
 
 #[test]
 fn bbox_from_string() {
-
     let bbox = "10 20 30 40".parse().ok();
     assert!(bbox.is_some());
     let bbox: BBox = bbox.unwrap();
@@ -215,16 +208,19 @@ fn bbox_from_string() {
 #[test]
 fn bbox_tile() {
     let t = Tile::new(0, 0, 0).unwrap();
-    assert_eq!(t.bbox(), BBox::new(85.05112, -180., -85.05112, 180.).unwrap());
+    assert_eq!(
+        t.bbox(),
+        BBox::new(85.05112, -180., -85.05112, 180.).unwrap()
+    );
 }
 
 #[test]
-fn bbox_contains_point(){
+fn bbox_contains_point() {
     // triangle from London, to Bristol to Birmingham
     let tile = Tile::new(7, 63, 42).unwrap();
     let bbox = tile.bbox();
-    let point1 = LatLon::new(51.75193, -1.25781).unwrap();  // oxford
-    let point2 = LatLon::new(48.7997, 2.4218).unwrap();     // paris
+    let point1 = LatLon::new(51.75193, -1.25781).unwrap(); // oxford
+    let point2 = LatLon::new(48.7997, 2.4218).unwrap(); // paris
 
     assert!(bbox.contains_point(&point1));
     assert!(!bbox.contains_point(&point2));
@@ -234,10 +230,9 @@ fn bbox_contains_point(){
     assert!(bbox.contains_point(&nw_corner));
 
     // Create  new point on the top edge along to the right from the NW corner
-    let nw_right = LatLon::new(nw_corner.lat, nw_corner.lon+0.001).unwrap();
+    let nw_right = LatLon::new(nw_corner.lat, nw_corner.lon + 0.001).unwrap();
     assert!(bbox.contains_point(&nw_right));
 
-    
     assert!(!bbox.contains_point(&tile.sw_corner()));
     assert!(!bbox.contains_point(&tile.ne_corner()));
     assert!(!bbox.contains_point(&tile.se_corner()));
@@ -245,7 +240,6 @@ fn bbox_contains_point(){
 
 #[test]
 fn bbox_overlaps() {
-
     let tile = Tile::new(7, 63, 42).unwrap();
     let parent_tile = tile.parent().unwrap();
 
@@ -257,7 +251,6 @@ fn bbox_overlaps() {
 
 #[test]
 fn bbox_tile_iter() {
-
     // left=-11.32 bottom=51.11 right=-4.97 top=55.7
     let ie_bbox = BBox::new(55.7, -11.32, 51.11, -4.97).unwrap();
     let mut tiles = ie_bbox.tiles();
@@ -270,12 +263,10 @@ fn bbox_tile_iter() {
     assert_eq!(tiles.next(), Tile::new(5, 15, 10));
     assert_eq!(tiles.next(), Tile::new(6, 29, 20));
     assert_eq!(tiles.next(), Tile::new(6, 29, 21));
-
 }
 
 #[test]
 fn test_num_tiles_in_zoom() {
-
     assert_eq!(num_tiles_in_zoom(0), Some(1));
     assert_eq!(num_tiles_in_zoom(1), Some(4));
     assert_eq!(num_tiles_in_zoom(2), Some(16));
@@ -293,7 +284,6 @@ fn test_num_tiles_in_zoom() {
 
 #[test]
 fn test_remaining_in_zoom() {
-
     assert_eq!(remaining_in_this_zoom(0, 0, 0), Some(1));
 
     assert_eq!(remaining_in_this_zoom(1, 0, 0), Some(4));
@@ -306,7 +296,6 @@ fn test_remaining_in_zoom() {
 
 #[test]
 fn all_tiles_to_zoom_iter() {
-
     let mut it = Tile::all_to_zoom(1);
 
     assert_eq!(it.next(), Tile::new(0, 0, 0));
@@ -315,7 +304,6 @@ fn all_tiles_to_zoom_iter() {
     assert_eq!(it.next(), Tile::new(1, 1, 0));
     assert_eq!(it.next(), Tile::new(1, 1, 1));
     assert_eq!(it.next(), None);
-
 
     assert_eq!(Tile::all_to_zoom(0).count(), 1);
     assert_eq!(Tile::all_to_zoom(1).count(), 5);
@@ -345,19 +333,54 @@ fn all_tiles_to_zoom_iter() {
 
     assert_eq!(Tile::all_to_zoom(3).size_hint(), (277, Some(277)));
     assert_eq!(Tile::all_to_zoom(4).size_hint(), (65_813, Some(65_813)));
-    assert_eq!(Tile::all_to_zoom(5).size_hint(), (4_295_033_109, Some(4_295_033_109)));
-    assert_eq!(Tile::all_to_zoom(6).size_hint(), (18_446_744_073_709_551_615, None));
-    assert_eq!(Tile::all_to_zoom(7).size_hint(), (18_446_744_073_709_551_615, None));
-    assert_eq!(Tile::all_to_zoom(8).size_hint(), (18_446_744_073_709_551_615, None));
-    assert_eq!(Tile::all_to_zoom(9).size_hint(), (18_446_744_073_709_551_615, None));
-    assert_eq!(Tile::all_to_zoom(10).size_hint(), (18_446_744_073_709_551_615, None));
-    assert_eq!(Tile::all_to_zoom(11).size_hint(), (18_446_744_073_709_551_615, None));
-    assert_eq!(Tile::all_to_zoom(12).size_hint(), (18_446_744_073_709_551_615, None));
-    assert_eq!(Tile::all_to_zoom(13).size_hint(), (18_446_744_073_709_551_615, None));
-    assert_eq!(Tile::all_to_zoom(14).size_hint(), (18_446_744_073_709_551_615, None));
-    assert_eq!(Tile::all_to_zoom(15).size_hint(), (18_446_744_073_709_551_615, None));
-    assert_eq!(Tile::all_to_zoom(16).size_hint(), (18_446_744_073_709_551_615, None));
-
+    assert_eq!(
+        Tile::all_to_zoom(5).size_hint(),
+        (4_295_033_109, Some(4_295_033_109))
+    );
+    assert_eq!(
+        Tile::all_to_zoom(6).size_hint(),
+        (18_446_744_073_709_551_615, None)
+    );
+    assert_eq!(
+        Tile::all_to_zoom(7).size_hint(),
+        (18_446_744_073_709_551_615, None)
+    );
+    assert_eq!(
+        Tile::all_to_zoom(8).size_hint(),
+        (18_446_744_073_709_551_615, None)
+    );
+    assert_eq!(
+        Tile::all_to_zoom(9).size_hint(),
+        (18_446_744_073_709_551_615, None)
+    );
+    assert_eq!(
+        Tile::all_to_zoom(10).size_hint(),
+        (18_446_744_073_709_551_615, None)
+    );
+    assert_eq!(
+        Tile::all_to_zoom(11).size_hint(),
+        (18_446_744_073_709_551_615, None)
+    );
+    assert_eq!(
+        Tile::all_to_zoom(12).size_hint(),
+        (18_446_744_073_709_551_615, None)
+    );
+    assert_eq!(
+        Tile::all_to_zoom(13).size_hint(),
+        (18_446_744_073_709_551_615, None)
+    );
+    assert_eq!(
+        Tile::all_to_zoom(14).size_hint(),
+        (18_446_744_073_709_551_615, None)
+    );
+    assert_eq!(
+        Tile::all_to_zoom(15).size_hint(),
+        (18_446_744_073_709_551_615, None)
+    );
+    assert_eq!(
+        Tile::all_to_zoom(16).size_hint(),
+        (18_446_744_073_709_551_615, None)
+    );
 }
 
 #[test]
@@ -368,11 +391,15 @@ fn all_sub_tiles_iter() {
     assert_eq!(it.next(), Tile::new(5, 14, 11));
     assert_eq!(it.next(), Tile::new(5, 15, 11));
 
-    let z10tiles: Vec<Tile> = Tile::new(4, 7, 5).unwrap().all_subtiles_iter().take_while(|t| t.zoom() < 11).filter(|t| t.zoom() == 10).collect();
+    let z10tiles: Vec<Tile> = Tile::new(4, 7, 5)
+        .unwrap()
+        .all_subtiles_iter()
+        .take_while(|t| t.zoom() < 11)
+        .filter(|t| t.zoom() == 10)
+        .collect();
     assert_eq!(z10tiles.len(), 4096);
     assert_eq!(z10tiles[0].zoom(), 10);
-    assert_eq!(z10tiles[z10tiles.len()-1].zoom(), 10);
-    
+    assert_eq!(z10tiles[z10tiles.len() - 1].zoom(), 10);
 }
 
 #[test]
@@ -391,7 +418,6 @@ fn test_zorder_to_xy() {
 
 #[test]
 fn test_metatile() {
-
     let mt = Metatile::new(8, 0, 0, 0);
     assert!(mt.is_some());
     let mt = mt.unwrap();
@@ -409,12 +435,10 @@ fn test_metatile() {
 
     let t = Tile::new(3, 3, 2).unwrap();
     assert_eq!(t.metatile(8), Some(mt));
-
 }
 
 #[test]
 fn test_metatile_all() {
-
     let mut it = Metatile::all(8);
 
     assert_eq!(it.next(), Metatile::new(8, 0, 0, 0));
@@ -430,14 +454,16 @@ fn test_metatile_all() {
     assert_eq!(it.next(), Metatile::new(8, 5, 0, 0));
 
     let it = Metatile::all(8);
-    let tiles: Vec<Metatile> = it.take_while(|mt| mt.zoom < 11).filter(|mt| mt.zoom == 10).collect();
+    let tiles: Vec<Metatile> = it
+        .take_while(|mt| mt.zoom < 11)
+        .filter(|mt| mt.zoom == 10)
+        .collect();
     assert_eq!(tiles.len(), 16384);
     assert_eq!(tiles[1], Metatile::new(8, 10, 8, 0).unwrap());
 }
 
 #[test]
 fn test_metatile_bbox() {
-
     assert_eq!(Metatile::new(8, 0, 0, 0).unwrap().size(), 1);
     assert_eq!(Metatile::new(8, 1, 0, 0).unwrap().size(), 2);
     assert_eq!(Metatile::new(8, 2, 0, 0).unwrap().size(), 4);
@@ -452,27 +478,52 @@ fn test_metatile_bbox() {
     assert_eq!(mt.ne_corner(), LatLon::new(85.05112, 180.0).unwrap());
     assert_eq!(mt.sw_corner(), LatLon::new(-85.05112, -180.0).unwrap());
     assert_eq!(mt.se_corner(), LatLon::new(-85.05112, 180.0).unwrap());
-
 }
 
 #[test]
 fn test_metatile_subtiles() {
-
-    assert_eq!(Metatile::new(8, 0, 0, 0).unwrap().tiles(), vec![(0, 0, 0)].into_iter().map(|c| Tile::new(c.0, c.1, c.2).unwrap()).collect::<Vec<Tile>>());
-    assert_eq!(Metatile::new(8, 1, 0, 0).unwrap().tiles(), vec![(1, 0, 0), (1, 0, 1), (1, 1, 0), (1, 1, 1)].into_iter().map(|c| Tile::new(c.0, c.1, c.2).unwrap()).collect::<Vec<Tile>>());
-    assert_eq!(Metatile::new(8, 2, 0, 0).unwrap().tiles(), vec![
-               (2, 0, 0), (2, 0, 1), (2, 0, 2), (2, 0, 3),
-               (2, 1, 0), (2, 1, 1), (2, 1, 2), (2, 1, 3),
-               (2, 2, 0), (2, 2, 1), (2, 2, 2), (2, 2, 3),
-               (2, 3, 0), (2, 3, 1), (2, 3, 2), (2, 3, 3),
-               ].into_iter().map(|c| Tile::new(c.0, c.1, c.2).unwrap()).collect::<Vec<Tile>>());
-
+    assert_eq!(
+        Metatile::new(8, 0, 0, 0).unwrap().tiles(),
+        vec![(0, 0, 0)]
+            .into_iter()
+            .map(|c| Tile::new(c.0, c.1, c.2).unwrap())
+            .collect::<Vec<Tile>>()
+    );
+    assert_eq!(
+        Metatile::new(8, 1, 0, 0).unwrap().tiles(),
+        vec![(1, 0, 0), (1, 0, 1), (1, 1, 0), (1, 1, 1)]
+            .into_iter()
+            .map(|c| Tile::new(c.0, c.1, c.2).unwrap())
+            .collect::<Vec<Tile>>()
+    );
+    assert_eq!(
+        Metatile::new(8, 2, 0, 0).unwrap().tiles(),
+        vec![
+            (2, 0, 0),
+            (2, 0, 1),
+            (2, 0, 2),
+            (2, 0, 3),
+            (2, 1, 0),
+            (2, 1, 1),
+            (2, 1, 2),
+            (2, 1, 3),
+            (2, 2, 0),
+            (2, 2, 1),
+            (2, 2, 2),
+            (2, 2, 3),
+            (2, 3, 0),
+            (2, 3, 1),
+            (2, 3, 2),
+            (2, 3, 3),
+        ]
+        .into_iter()
+        .map(|c| Tile::new(c.0, c.1, c.2).unwrap())
+        .collect::<Vec<Tile>>()
+    );
 }
-
 
 #[test]
 fn test_metatile_subtiles_bbox1() {
-
     // left=-11.32 bottom=51.11 right=-4.97 top=55.7
     let ie_bbox = BBox::new(55.7, -11.32, 51.11, -4.97).unwrap();
     let mut metatiles = ie_bbox.metatiles(8);
@@ -498,7 +549,6 @@ fn test_metatile_subtiles_bbox1() {
 
 #[test]
 fn test_metatile_subtiles_bbox2() {
-
     let ie_bbox = BBox::new(55.7, -11.32, 51.11, -4.97).unwrap();
     let mut metatiles = MetatilesIterator::new_for_bbox_zoom(8, &Some(ie_bbox), 0, 5);
     assert_eq!(metatiles.next(), Metatile::new(8, 0, 0, 0));
@@ -510,15 +560,12 @@ fn test_metatile_subtiles_bbox2() {
     assert_eq!(metatiles.next(), None);
 }
 
-
 #[test]
 fn test_metatile_subtiles_bbox3() {
-
     let ie_bbox = BBox::new(55.7, -11.32, 51.11, -4.97).unwrap();
     let mut metatiles = MetatilesIterator::new_for_bbox_zoom(8, &Some(ie_bbox), 5, 5);
     assert_eq!(metatiles.next(), Metatile::new(8, 5, 8, 8));
     assert_eq!(metatiles.next(), None);
-
 }
 
 #[test]
@@ -545,7 +592,6 @@ fn test_metatile_subtiles_bbox4() {
 
 #[test]
 fn test_lat_lon_to_tile1() {
-
     assert_eq!(lat_lon_to_tile(51.50101, -0.12418, 18), (130981, 87177));
     assert_eq!(lat_lon_to_tile(51.50101, -0.12418, 17), (65490, 43588));
     assert_eq!(lat_lon_to_tile(51.50101, -0.12418, 16), (32745, 21794));
@@ -687,12 +733,15 @@ fn parse_metatile1() {
     assert_eq!("8 4/1/1".parse().ok(), Metatile::new(8, 4, 0, 0));
 }
 
-#[cfg(feature="world_file")]
+#[cfg(feature = "world_file")]
 #[test]
 fn world_file() {
     let t = Tile::new(6, 33, 21).unwrap();
     let wf = t.world_file();
-    assert_eq!(format!("{}", wf), "2445.98490512564\n0\n0\n-2445.98490512564\n626172.1357121654\n6887893.4928338025\n");
+    assert_eq!(
+        format!("{}", wf),
+        "2445.98490512564\n0\n0\n-2445.98490512564\n626172.1357121654\n6887893.4928338025\n"
+    );
 }
 
 #[test]
@@ -700,13 +749,15 @@ fn bbox_tiles() {
     let ie_bbox = BBox::new(55.7, -11.32, 51.11, -4.97).unwrap();
 
     macro_rules! assert_bbox {
-        ($bbox:expr, $zoom:expr, $coords:expr ) => {
-            {
-                let output: Vec<Tile> = $bbox.tiles_for_zoom($zoom).collect();
-                let expected: Vec<Tile> = $coords.into_iter().map(|xy| Tile::new($zoom, xy.0, xy.1).unwrap()).collect();
-                assert_eq!(output, expected);
-            }
-    }}
+        ($bbox:expr, $zoom:expr, $coords:expr ) => {{
+            let output: Vec<Tile> = $bbox.tiles_for_zoom($zoom).collect();
+            let expected: Vec<Tile> = $coords
+                .into_iter()
+                .map(|xy| Tile::new($zoom, xy.0, xy.1).unwrap())
+                .collect();
+            assert_eq!(output, expected);
+        }};
+    }
 
     assert_bbox!(&ie_bbox, 0, vec![(0, 0)]);
     assert_bbox!(&ie_bbox, 1, vec![(0, 0)]);
@@ -716,23 +767,23 @@ fn bbox_tiles() {
 }
 
 mod metatiles {
-     use super::*;
+    use super::*;
 
-     mod modtiles {
-         use super::*;
+    mod modtiles {
+        use super::*;
 
         #[test]
-         fn simple1() {
+        fn simple1() {
             let mt_meta = ModTileMetatile::new(0, 0, 0);
             assert!(mt_meta.is_some());
             let mt_meta = mt_meta.unwrap();
             assert_eq!(mt_meta.path("png"), "0/0/0/0/0/0.png");
-         }
+        }
 
-         #[test]
-         fn simple2() {
-             let mt = ModTileMetatile::new(0, 0, 0).unwrap();
-             assert_eq!(mt.tiles(), vec![Tile::new(0, 0, 0).unwrap()]);
-         }
-     }
+        #[test]
+        fn simple2() {
+            let mt = ModTileMetatile::new(0, 0, 0).unwrap();
+            assert_eq!(mt.tiles(), vec![Tile::new(0, 0, 0).unwrap()]);
+        }
+    }
 }
