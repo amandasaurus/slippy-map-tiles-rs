@@ -715,11 +715,6 @@ fn bbox_tiles() {
     assert_bbox!(&ie_bbox, 4, vec![(7, 5)]);
 }
 
-#[test]
-fn merc_location_to_tile_coords1() {
-    assert_eq!(merc_location_to_tile_coords(-558712.52, 7491421.57, 0), ((0, 0), (0, 0)));
-}
-
 mod metatiles {
      use super::*;
 
