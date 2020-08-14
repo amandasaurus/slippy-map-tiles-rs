@@ -98,11 +98,7 @@ impl Tile {
             .unwrap();
         }
 
-        let caps = RE.captures(tms);
-        if caps.is_none() {
-            return None;
-        }
-        let caps = caps.unwrap();
+        let caps = RE.captures(tms)?;
 
         let zoom = caps.name("zoom");
         let x = caps.name("x");
@@ -430,11 +426,7 @@ fn remaining_in_this_zoom(next_zoom: u8, next_x: u32, next_y: u32) -> Option<usi
     let remaining_rows = max_tile_no - next_x - 1;
     let remaining_rows = remaining_rows as usize;
 
-    let remaining_after_this_column = remaining_rows.checked_mul(max_tile_no as usize);
-    if remaining_after_this_column.is_none() {
-        return None;
-    }
-    let remaining_after_this_column = remaining_after_this_column.unwrap();
+    let remaining_after_this_column = remaining_rows.checked_mul(max_tile_no as usize)?;
 
     remaining_in_column.checked_add(remaining_after_this_column)
 }
@@ -513,7 +505,7 @@ impl Iterator for AllSubTilesIterator {
     type Item = Tile;
 
     fn next(&mut self) -> Option<Tile> {
-        if self._tiles.len() == 0 {
+        if self._tiles.is_empty() {
             return None;
         }
         let next = self._tiles.remove(0);
@@ -1227,10 +1219,8 @@ impl BBox {
         let bottom_right_tile = lat_lon_to_tile(self.bottom, self.right, zoom);
 
         (top_left_tile.0..=bottom_right_tile.0)
-            .into_iter()
             .flat_map(move |x| {
                 (top_left_tile.1..=bottom_right_tile.1)
-                    .into_iter()
                     .map(move |y| (x, y))
             })
             .map(move |(x, y)| Tile::new(zoom, x, y).unwrap())
@@ -1362,7 +1352,7 @@ impl<'a> Iterator for BBoxTilesIterator<'a> {
             self.tile_index = 0;
         }
 
-        let tile = self.tiles[self.tile_index].clone();
+        let tile = self.tiles[self.tile_index];
         self.tile_index += 1;
         Some(tile)
     }
@@ -1456,7 +1446,7 @@ pub fn xy_to_zorder(x: u32, y: u32) -> u64 {
         let x_set: bool = (x >> i) & 1 == 1;
         let y_set: bool = (y >> i) & 1 == 1;
         if x_set {
-            res |= 1 << i * 2;
+            res |= 1 << (i * 2);
         }
         if y_set {
             res |= 1 << (i * 2) + 1;
@@ -1471,8 +1461,8 @@ pub fn zorder_to_xy(zorder: u64) -> (u32, u32) {
     let mut y: u32 = 0;
 
     for i in 0..32 {
-        let x_bit_set = (zorder >> i * 2) & 1 == 1;
-        let y_bit_set = (zorder >> (i * 2) + 1) & 1 == 1;
+        let x_bit_set = (zorder >> (i * 2)) & 1 == 1;
+        let y_bit_set = (zorder >> ((i * 2) + 1)) & 1 == 1;
 
         if x_bit_set {
             x |= 1 << i;
