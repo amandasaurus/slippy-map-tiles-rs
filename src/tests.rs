@@ -700,8 +700,8 @@ fn bbox_tiles() {
     let ie_bbox = BBox::new(55.7, -11.32, 51.11, -4.97).unwrap();
     fn check(bbox: &BBox, zoom: u8, coords: Vec<(u32, u32)>) {
         let output: Vec<Tile> = bbox.tiles_for_zoom(zoom).collect();
-        let exptected: Vec<Tile> = coords.into_iter().map(|xy| Tile::new(zoom, xy.0, xy.1).unwrap()).collect();
-        assert_eq!(output, exptected);
+        let expected: Vec<Tile> = coords.into_iter().map(|xy| Tile::new(zoom, xy.0, xy.1).unwrap()).collect();
+        assert_eq!(output, expected);
     }
 
     check(&ie_bbox, 0, vec![(0, 0)]);
