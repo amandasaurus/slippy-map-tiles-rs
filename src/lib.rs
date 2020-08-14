@@ -96,13 +96,10 @@ impl Tile {
         if zoom.is_none() || x.is_none() || y.is_none() {
             return None;
         }
-        let zoom = zoom.unwrap();
-        let x = x.unwrap();
-        let y = y.unwrap();
+        let zoom = zoom.unwrap().as_str().parse();
+        let x = x.unwrap().as_str().parse();
+        let y = y.unwrap().as_str().parse();
 
-        let zoom = zoom.parse();
-        let x = x.parse();
-        let y = y.parse();
         if zoom.is_err() || x.is_err() || y.is_err() {
             return None;
         }
@@ -322,9 +319,9 @@ impl FromStr for Tile {
         let caps = caps.unwrap();
 
         // If the regex matches, then none of these should fail, right?
-        let zoom = caps.name("zoom").unwrap().parse().unwrap();
-        let x = caps.name("x").unwrap().parse().unwrap();
-        let y = caps.name("y").unwrap().parse().unwrap();
+        let zoom = caps.name("zoom").unwrap().as_str().parse().unwrap();
+        let x = caps.name("x").unwrap().as_str().parse().unwrap();
+        let y = caps.name("y").unwrap().as_str().parse().unwrap();
         
         match Tile::new(zoom, x, y) {
             None => {
@@ -596,10 +593,10 @@ impl FromStr for Metatile {
         let caps = caps.unwrap();
 
         // If the regex matches, then none of these should fail, right?
-        let scale = caps.name("scale").unwrap().parse().unwrap();
-        let zoom = caps.name("zoom").unwrap().parse().unwrap();
-        let x = caps.name("x").unwrap().parse().unwrap();
-        let y = caps.name("y").unwrap().parse().unwrap();
+        let scale = caps.name("scale").unwrap().as_str().parse().unwrap();
+        let zoom = caps.name("zoom").unwrap().as_str().parse().unwrap();
+        let x = caps.name("x").unwrap().as_str().parse().unwrap();
+        let y = caps.name("y").unwrap().as_str().parse().unwrap();
         
         match Metatile::new(scale, zoom, x, y) {
             None => {
@@ -1137,10 +1134,10 @@ impl FromStr for BBox {
             return Err("bad lat/lon");
         }
 
-        let minlat = minlat.unwrap().parse();
-        let maxlat = maxlat.unwrap().parse();
-        let minlon = minlon.unwrap().parse();
-        let maxlon = maxlon.unwrap().parse();
+        let minlat = minlat.unwrap().as_str().parse();
+        let maxlat = maxlat.unwrap().as_str().parse();
+        let minlon = minlon.unwrap().as_str().parse();
+        let maxlon = maxlon.unwrap().as_str().parse();
 
         if minlat.is_err() || maxlat.is_err() || minlon.is_err() || maxlon.is_err() {
             return Err("bad lat/lon");
