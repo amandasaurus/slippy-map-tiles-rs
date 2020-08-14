@@ -23,6 +23,9 @@ use regex::Regex;
 use std::str::FromStr;
 use std::fs::File;
 use std::io::{BufRead, BufReader, Seek, SeekFrom};
+use std::convert::TryFrom;
+use std::borrow::Borrow;
+use std::ops::Deref;
 
 #[cfg(feature="world_file")]
 use world_image_file::WorldFile;
@@ -830,6 +833,38 @@ impl ModTileMetatile {
     /// not be the full `scale` tiles across.
     pub fn size(self) -> u8 { self.inner.size() }
 
+}
+
+impl From<ModTileMetatile> for Metatile {
+    fn from(mt: ModTileMetatile) -> Self {
+        mt.inner
+    }
+}
+
+impl TryFrom<Metatile> for ModTileMetatile {
+    type Error = &'static str;
+
+    fn try_from(mt: Metatile) -> Result<Self, Self::Error> {
+        if mt.scale == 8 {
+            Ok(ModTileMetatile{ inner: mt })
+        } else {
+            Err("Can only convert scale 8 metatiles into ModTileMetatile")
+        }
+    }
+}
+
+impl Borrow<Metatile> for ModTileMetatile {
+    fn borrow(&self) -> &Metatile {
+        &self.inner
+    }
+}
+
+impl Deref for ModTileMetatile {
+    type Target = Metatile;
+
+    fn deref(&self) -> &Metatile {
+        &self.inner
+    }
 }
 
 
