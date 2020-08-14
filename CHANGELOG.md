@@ -1,3 +1,10 @@
+<a name="v0.16.0"></a>
+## v0.16.0 (2018-07-20)
+
+* `ModTileMetatiles` can be deref'ed to `Metatile`
+* Internal refactoring, formatting & lints
+* Updated dependencies
+
 <a name="v0.15.0"></a>
 ## v0.15.0 (2018-07-20)
 
