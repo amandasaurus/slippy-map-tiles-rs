@@ -1069,7 +1069,7 @@ impl LatLon {
     /// Constructs a LatLon from a given `lat` and `lon`. Returns `None` if the lat or lon is
     /// invalid, e.g. a lat of 100.
     pub fn new(lat: f32, lon: f32) -> Option<LatLon> {
-        if (-90f32 ..= 90f32).contains(&lat) && (-180f32 ..= 180.).contains(&lon) {
+        if (-90f32..=90f32).contains(&lat) && (-180f32..=180.).contains(&lon) {
             Some(LatLon { lat: lat, lon: lon })
         } else {
             None
@@ -1120,10 +1120,10 @@ impl BBox {
         //let left = if right > left { left } else { right };
         //let right = if right > left { right } else { left };
 
-        if  (-90. ..=90.).contains(&top)
-          &&(-90. ..=90.).contains(&bottom) 
-          &&(-180. ..=180.).contains(&left) 
-          &&(-180. ..=180.).contains(&right) 
+        if (-90. ..=90.).contains(&top)
+            && (-90. ..=90.).contains(&bottom)
+            && (-180. ..=180.).contains(&left)
+            && (-180. ..=180.).contains(&right)
         {
             Some(BBox {
                 top,
@@ -1215,10 +1215,7 @@ impl BBox {
         let bottom_right_tile = lat_lon_to_tile(self.bottom, self.right, zoom);
 
         (top_left_tile.0..=bottom_right_tile.0)
-            .flat_map(move |x| {
-                (top_left_tile.1..=bottom_right_tile.1)
-                    .map(move |y| (x, y))
-            })
+            .flat_map(move |x| (top_left_tile.1..=bottom_right_tile.1).map(move |y| (x, y)))
             .map(move |(x, y)| Tile::new(zoom, x, y).unwrap())
     }
 
