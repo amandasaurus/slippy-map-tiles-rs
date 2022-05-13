@@ -1,3 +1,8 @@
+## Unreleased
+
+* Internal refactoring
+* `slippy_map_tiles::all_tiles()`
+
 <a name="v0.16.0"></a>
 ## v0.16.0 (2018-07-20)
 

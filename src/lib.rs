@@ -293,11 +293,9 @@ impl Tile {
     /// # use slippy_map_tiles::Tile;
     /// let mut all_tiles_iter = Tile::all();
     /// ```
+    #[deprecated]
     pub fn all() -> AllTilesIterator {
-        AllTilesIterator {
-            next_zoom: 0,
-            next_zorder: 0,
-        }
+        crate::all_tiles()
     }
 
     /// Returns an iterator that yields all the tiles from zoom 0 down to, and including, all the
@@ -404,6 +402,13 @@ impl Iterator for AllTilesIterator {
         }
 
         tile
+    }
+}
+
+pub fn all_tiles() -> AllTilesIterator {
+    AllTilesIterator {
+        next_zoom: 0,
+        next_zorder: 0,
     }
 }
 
