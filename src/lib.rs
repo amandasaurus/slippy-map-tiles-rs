@@ -1069,7 +1069,7 @@ impl LatLon {
     /// Constructs a LatLon from a given `lat` and `lon`. Returns `None` if the lat or lon is
     /// invalid, e.g. a lat of 100.
     pub fn new(lat: f32, lon: f32) -> Option<LatLon> {
-        if lat <= 90f32 && lat >= -90f32 && lon <= 180f32 && lon >= -180f32 {
+        if (-90f32 ..= 90f32).contains(&lat) && (-180f32 ..= 180.).contains(&lon) {
             Some(LatLon { lat: lat, lon: lon })
         } else {
             None
@@ -1120,20 +1120,16 @@ impl BBox {
         //let left = if right > left { left } else { right };
         //let right = if right > left { right } else { left };
 
-        if top <= 90.
-            && top >= -90.
-            && bottom <= 90.
-            && bottom >= -90.
-            && left <= 180.
-            && left >= -180.
-            && right <= 180.
-            && right >= -180.
+        if  (-90. ..=90.).contains(&top)
+          &&(-90. ..=90.).contains(&bottom) 
+          &&(-180. ..=180.).contains(&left) 
+          &&(-180. ..=180.).contains(&right) 
         {
             Some(BBox {
-                top: top,
-                left: left,
-                bottom: bottom,
-                right: right,
+                top,
+                left,
+                bottom,
+                right,
             })
         } else {
             None
@@ -1174,7 +1170,7 @@ impl BBox {
 
     /// Iterate over all the tiles from z0 onwards that this bbox is in
     pub fn tiles(&self) -> BBoxTilesIterator {
-        BBoxTilesIterator::new(&self)
+        BBoxTilesIterator::new(self)
     }
 
     /// Iterate over all the metatiles from z0 onwards that this bbox is in
@@ -1406,15 +1402,15 @@ fn xy_to_mt(x: u32, y: u32) -> [String; 5] {
     x >>= 4;
     y >>= 4;
 
-    let c = (((x & 0b000_1111 as u32) << 4) | (y & 0b000_1111 as u32)) as u8;
+    let c = (((x & 0b000_1111_u32) << 4) | (y & 0b000_1111_u32)) as u8;
     x >>= 4;
     y >>= 4;
 
-    let b = (((x & 0b000_1111 as u32) << 4) | (y & 0b000_1111 as u32)) as u8;
+    let b = (((x & 0b000_1111_u32) << 4) | (y & 0b000_1111_u32)) as u8;
     x >>= 4;
     y >>= 4;
 
-    let a = (((x & 0b000_1111 as u32) << 4) | (y & 0b000_1111 as u32)) as u8;
+    let a = (((x & 0b000_1111_u32) << 4) | (y & 0b000_1111_u32)) as u8;
     //x >>= 4;
     //y >>= 4;
 
